@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.api.pessoa.model.Pessoa;
 import com.api.pessoa.repository.PessoaRepository;
+import com.api.pessoa.service.exception.PessoaNaoEncontradaException;
 
 @Service
 public class PessoaService {
@@ -14,6 +15,10 @@ public class PessoaService {
 	public Pessoa salvar(Pessoa pessoa) {
 		incluirTelefones(pessoa);
 		return repository.save(pessoa);
+	}
+	
+	public Pessoa buscarPorId(Long id) {
+		return repository.findById(id).orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada."));
 	}
 
 	private void incluirTelefones(Pessoa pessoa) {

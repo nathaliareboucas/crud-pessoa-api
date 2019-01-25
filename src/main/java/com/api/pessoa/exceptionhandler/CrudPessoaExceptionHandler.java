@@ -11,11 +11,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.api.pessoa.model.Erro;
+import com.api.pessoa.service.exception.PessoaNaoEncontradaException;
 
 @ControllerAdvice
 @RestController
@@ -39,6 +41,15 @@ public class CrudPessoaExceptionHandler extends ResponseEntityExceptionHandler {
 		Erro erro = new Erro(mensagemUsuario, mensagemDesenvolvedor, System.currentTimeMillis());
 		
 		return handleExceptionInternal(ex, erro, headers, HttpStatus.BAD_REQUEST, request);
+	}
+	
+	@ExceptionHandler(PessoaNaoEncontradaException.class)
+	public ResponseEntity<Object> handlePessoaNaoEncontradaException(PessoaNaoEncontradaException ex,
+			WebRequest request) {	
+		
+		Erro erro = new Erro(ex.getMessage(), ex.getMessage(), System.currentTimeMillis());
+		
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
 
 	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
