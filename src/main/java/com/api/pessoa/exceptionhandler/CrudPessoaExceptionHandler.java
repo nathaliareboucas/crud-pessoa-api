@@ -36,7 +36,7 @@ public class CrudPessoaExceptionHandler extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
-		String mensagemUsuario = "Data inválida.";	
+		String mensagemUsuario = "Mensagem inválida.";	
 		String mensagemDesenvolvedor = ex.getMessage();
 		Erro erro = new Erro(mensagemUsuario, mensagemDesenvolvedor, System.currentTimeMillis());
 		

@@ -20,14 +20,33 @@ public class PessoaService {
 	public Pessoa buscarPorId(Long id) {
 		return repository.findById(id).orElseThrow(() -> new PessoaNaoEncontradaException("Pessoa não encontrada."));
 	}
+	
+	public Pessoa atualizar(Pessoa pessoa) {
+		Pessoa pessoaExistente = buscarPorId(pessoa.getId());
+		pessoaExistente = removerTelefones(pessoa, pessoaExistente);
+		pessoaExistente = incluirTelefones(pessoa);
+		pessoa.setId(pessoa.getId());
+		
+		return repository.save(pessoaExistente);
+	}
 
-	private void incluirTelefones(Pessoa pessoa) {
+	private Pessoa incluirTelefones(Pessoa pessoa) {
 		if (pessoa.getTelefones() != null && !pessoa.getTelefones().isEmpty()) {
 			pessoa.getTelefones().forEach(telefone -> {
 				telefone.setPessoa(pessoa);
 			});
 		}
 		
+		return pessoa;
+		
+	}
+	
+	private Pessoa removerTelefones(Pessoa pessoa, Pessoa pessoaExistente) {
+		if(pessoaExistente.getTelefones() != null && !pessoaExistente.getTelefones().isEmpty()) {
+			pessoaExistente.getTelefones().removeIf(t -> !pessoa.getTelefones().contains(t));
+		}
+		
+		return pessoaExistente;
 	}
 
 }
