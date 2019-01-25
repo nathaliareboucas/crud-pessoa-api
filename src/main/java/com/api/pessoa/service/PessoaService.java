@@ -29,6 +29,10 @@ public class PessoaService {
 		
 		return repository.save(pessoaExistente);
 	}
+	
+	public void deletar(Long id) {
+		repository.deleteById(id);
+	}
 
 	private Pessoa incluirTelefones(Pessoa pessoa) {
 		if (pessoa.getTelefones() != null && !pessoa.getTelefones().isEmpty()) {

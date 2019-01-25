@@ -3,6 +3,7 @@ package com.api.pessoa.exceptionhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,17 @@ public class CrudPessoaExceptionHandler extends ResponseEntityExceptionHandler {
 			WebRequest request) {	
 		
 		Erro erro = new Erro(ex.getMessage(), ex.getMessage(), System.currentTimeMillis());
+		
+		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+	}
+	
+	@ExceptionHandler(EmptyResultDataAccessException.class)
+	public ResponseEntity<Object> handleEmptyResultDataAccessException(EmptyResultDataAccessException ex,
+			WebRequest request) {
+		
+		String mensagemUsuario ="Recurso não encontrado.";
+		String mensagemDesenvolvedor = ex.toString();
+		Erro erro = new Erro(mensagemUsuario, mensagemDesenvolvedor, System.currentTimeMillis());
 		
 		return handleExceptionInternal(ex, erro, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
