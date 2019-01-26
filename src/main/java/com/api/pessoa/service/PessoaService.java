@@ -1,16 +1,20 @@
 package com.api.pessoa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.api.pessoa.model.Pessoa;
 import com.api.pessoa.repository.PessoaRepository;
+import com.api.pessoa.repository.filter.PessoaFilter;
 import com.api.pessoa.service.exception.PessoaNaoEncontradaException;
 
 @Service
 public class PessoaService {
 	
-	@Autowired PessoaRepository repository;
+	@Autowired 
+	PessoaRepository repository;
 	
 	public Pessoa salvar(Pessoa pessoa) {
 		incluirTelefones(pessoa);
@@ -33,6 +37,10 @@ public class PessoaService {
 	public void deletar(Long id) {
 		repository.deleteById(id);
 	}
+	
+	public Page<Pessoa> pesquisar(PessoaFilter filter, Pageable pageable) {
+		return repository.pesquisar(filter, pageable);
+	}
 
 	private Pessoa incluirTelefones(Pessoa pessoa) {
 		if (pessoa.getTelefones() != null && !pessoa.getTelefones().isEmpty()) {
@@ -41,8 +49,7 @@ public class PessoaService {
 			});
 		}
 		
-		return pessoa;
-		
+		return pessoa;		
 	}
 	
 	private Pessoa removerTelefones(Pessoa pessoa, Pessoa pessoaExistente) {
